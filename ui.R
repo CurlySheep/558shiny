@@ -1,28 +1,49 @@
+library(shiny)
+library(shinydashboard)
+library(DT)
 library(ggplot2)
 
-shinyUI(fluidPage(
+dashboardPage(skin = "red",
   
-  # Application title
-  titlePanel(uiOutput("tab")),
+  # Add Title
+  dashboardHeader(title = "The Impact of Air Pollution on the Spread of COVID-19 in China", titleWidth = 800),
   
-  # Sidebar with options for the data set
-  sidebarLayout(
-    sidebarPanel(
-      h3("Select the mammal's biological order:"),
-      selectizeInput("vore", "Vore", selected = "omni", choices = levels(as.factor(msleep$vore))),
-      br(),
-      sliderInput("size", "Size of Points on Graph",
-                  min = 1, max = 10, value = 5, step = 1),
-      checkboxInput("conservation", h4("Color Code Conservation Status", style = "color:red;")),
-      conditionalPanel(condition = "input.conservation == 1",
-                       checkboxInput("REM", h5("Also change symbol based on REM sleep?"), value = F))
-    ),
-    
-    # Show outputs
-    mainPanel(
-      plotOutput("sleepPlot"),
-      textOutput("info"),
-      tableOutput("table")
+  # Define Sidebar Items
+  dashboardSidebar(sidebarMenu(
+    menuItem("About", tabName = "Tab1"),
+    menuItem("Data", tabName = "Tab2"),
+    menuItem("Data Exploratin", tabName = "Tab3"),
+    menuItem("Modeling", tabName = "Tab4")
+  )),
+  
+  # Define the Body of the APP
+  dashboardBody(
+    tabItems(
+      
+      #####################First Tab Content####################
+      tabItem(tabName = "Tab1",
+              h1("Test")
+              ),
+      
+      #####################Second Tab Content####################
+      tabItem(tabName = "Tab2",
+              h1("Test")
+              
+              ),
+      
+      #####################Third Tab Content####################
+      tabItem(tabName = "Tab3",
+              h1("Test")
+              
+      ),
+      
+      #####################Forth Tab Content####################
+      tabItem(tabName = "Tab4",
+              h1("Test")
+              
+      )
+      
     )
   )
-))
+  
+)
