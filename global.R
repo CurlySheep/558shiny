@@ -37,6 +37,30 @@ library(tidyverse)
   }
   
   
+  # Define export options
+  export <- list(
+    list(
+      text = "PNG",
+      onclick = JS("function () {
+                   this.exportChart({ type: 'image/png' }); }")
+    ),
+    list(
+      text = "JPEG",
+      onclick = JS("function () {
+                   this.exportChart({ type: 'image/jpeg' }); }")
+    ),
+    list(
+      text = "SVG",
+      onclick = JS("function () {
+                   this.exportChart({ type: 'image/svg+xml' }); }")
+    ),
+    list(
+      text = "PDF",
+      onclick = JS("function () {
+                   this.exportChart({ type: 'application/pdf' }); }")
+    )
+  )
+  
   
   
   

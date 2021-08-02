@@ -117,7 +117,22 @@ shinyServer(function(input, output, session) {
   
   # High charter plot
   output$hc_plot <- renderHighchart({
-    hc_plot(Inputdata(), input$city_selecte_tag3, input$var_selecte_tag3)
+    if (input$down_type=="Box/Bar plot"){
+      hc_plot(Inputdata(), input$city_selecte_tag3, input$var_selecte_tag3)
+    } else{
+      hc_plot(Inputdata(), input$city_selecte_tag3, input$var_selecte_tag3) %>%
+        hc_exporting(
+          enabled = T,
+          url = "https://export.highcharts.com",
+          formAttributes = list(target = "_blank"),
+          buttons = list(contextButton = list(
+            text = "Export",
+            theme = list(fill = "transparent"),
+            menuItems = export
+        ))
+        )
+    }
+    
   })
   
   # Output the plot
@@ -126,13 +141,23 @@ shinyServer(function(input, output, session) {
     Outputplot()
   })
   
-  # Download function
+  # Download function for Box/Bar plot
   output$down_plot <- downloadHandler(
     filename = function(){paste0("plot_tag3", ".png")},
     content = function(file){
       ggsave(file, plot = Outputplot())
     }
   )
+  
+  # Download function for highcharter
+  #output$down_hc_plot <- downloadHandler(
+  #  filename = function(){paste0("hc_plot", ".png")},
+  #  content = function(file){
+  #    png(file, width=800, height=800)
+  #    hc_plot(Inputdata(), input$city_selecte_tag3, input$var_selecte_tag3)
+  #    dev.off()
+  #  }
+  #)
   
   # Create summary table
   output$table_tag3 <- renderTable({

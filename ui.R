@@ -186,8 +186,18 @@ dashboardPage(skin = "red",
                        
                        # Download plot
                        box(width = 12,
-                           h4("You can download the plot by click the button:"),
-                           downloadButton(outputId = "down_plot", label = "Download Plot!")
+                           h4("You can download the plot by select the type first:"),
+                           radioButtons(inputId = "down_type",
+                                        label = "",
+                                        choices = c("Box/Bar plot", "Line plot")
+                                        ),
+                           conditionalPanel(condition = "input.down_type == 'Box/Bar plot'",
+                                            downloadButton(outputId = "down_plot", label = "Box/Bar Plot!")
+                           ),
+                           conditionalPanel(condition = "input.down_type == 'Line plot'",
+                                            h4("Click the upper right corner button of the line plot.", style = "color:red;"),
+                                            h4("You need open this APP in browser in order to download the line plot!", style = "color:red;")
+                                            )
                            )
                        
                        
@@ -195,6 +205,7 @@ dashboardPage(skin = "red",
                 column(width = 9,
                        h1("Plot:"),
                        plotOutput("plot_tag3"),
+                       br(),
                        highchartOutput("hc_plot"),
                        h1("Numerical Summary:"),
                        box(width = 12,
