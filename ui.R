@@ -283,16 +283,18 @@ dashboardPage(skin = "red",
                                   box(width = 12,
                                       sliderInput("cv_fold", "Cross validation folds:",
                                                   min = 1, max = 10, value = 3, step = 1)
-                                  )
+                                  ),
                                   
-
-                                  
+                                  # Action Button
+                                  box(width = 12,
+                                      actionButton("gobutton", "Click here to start!"),
+                                      h4(strong("Usually it will take 3-5 mins."))
+                                      )
                                   ),
                            
                            column(width = 9,
                                   br(),
-                                  # Action Button
-                                  actionButton("gobutton", "Click here to start!"),
+                                  
                                   
                                   # Summary
                                   box(width = 12,
@@ -312,13 +314,101 @@ dashboardPage(skin = "red",
                                   
                                   # Table
                                   box(width = 12,
-                                      #tableOutput("RMSE")
+                                      tableOutput("RMSE")
                                       )
                                   )
                          )
-                         
                          ),
-                tabPanel("Prediction")
+                tabPanel("Prediction",
+                         fluidRow(
+                           column(width = 3,
+                                  br(),
+                                  
+                                  # Select the Model
+                                  box(width = 12,
+                                      h4("You can select a model to predict:"),
+                                      radioButtons(inputId = "model_select",
+                                                   label = "",
+                                                   choices = c("Linear Regression", "Boosted Tree", "Random Forest"),
+                                                   selected = "Linear Regression")
+                                      ),
+                                  
+                                  # Predict Button
+                                  box(width = 12,
+                                      h4(strong("Be sure to run the models first!")),
+                                      actionButton("prebutton", "Click here to predict!")
+                                      ),
+                                  
+                                  # AQI
+                                  box(width = 12,
+                                      sliderInput("AQI", "Input the value of AQI",
+                                                               min = 1, max = 200, value = 50, step = 1)
+                                  ),
+                                  
+                                  # level
+                                  box(width = 12,
+                                      sliderInput("level", "Input the value of level",
+                                                  min = 1, max = 5, value = 1, step = 1)
+                                  ),
+                                  
+                                  # PM2.5
+                                  box(width = 12,
+                                      sliderInput("PM2", "Input the value of PM2.5",
+                                                  min = 1, max = 200, value = 50, step = 1)
+                                  ),
+                                  
+                                  # PM10
+                                  box(width = 12,
+                                      sliderInput("PM10", "Input the value of PM10",
+                                                  min = 1, max = 250, value = 50, step = 1)
+                                  ),
+                                  
+                                  # SO2
+                                  box(width = 12,
+                                      sliderInput("SO2", "Input the value of SO2",
+                                                  min = 1, max = 10, value = 5, step = 1)
+                                  ),
+                                  
+                                  # CO
+                                  box(width = 12,
+                                      sliderInput("CO", "Input the value of CO",
+                                                  min = 0, max = 2, value = 0.7, step = 0.1)
+                                  ),
+                                  
+                                  # NO2
+                                  box(width = 12,
+                                      sliderInput("NO2", "Input the value of NO2",
+                                                  min = 1, max = 100, value = 20, step = 1)
+                                  ),
+                                  
+                                  # O3
+                                  box(width = 12,
+                                      sliderInput("O3", "Input the value of O3",
+                                                  min = 1, max = 150, value = 50, step = 1)
+                                  ),
+                                  
+                                  # High tem
+                                  box(width = 12,
+                                      sliderInput("high_tem", "Input the value of highest temperature",
+                                                  min = 1, max = 30, value = 10, step = 1)
+                                  ),
+                                  
+                                  # Low tem
+                                  box(width = 12,
+                                      sliderInput("low_tem", "Input the value of lowest temperature",
+                                                  min = -10, max = 20, value = 5, step = 1)
+                                  )
+                                  
+                                  ),
+                           column(width = 9,
+                                  br(),
+                                  # Show the result
+                                  h1("The predicted value is:"),
+                                  verbatimTextOutput("predict")
+                                  
+                                  )
+                         )
+                         )
               )
               
               )

@@ -252,24 +252,50 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  #Output RMSE on training set
-  #output$RMSE <- renderTable({
-  #  RMSE_lm <- sqrt(mean(fit_lm()$residuals^2))
-  #  RMSE_Tree <- sqrt(mean((fit_Tree()$fit-Splitdata()[["Train"]][,input$Re_tag4])^2))  
-  #  RMSE_random <- min(fit_random()$results$RMSE)
+  # Output RMSE and Test MSE
+  output$RMSE <- renderTable({
+    RMSE_lm <- sqrt(mean(fit_lm()$residuals^2))
+    RMSE_Tree <- sqrt(mean((fit_Tree()$fit-Splitdata()[["Train"]][,input$Re_tag4])^2))  
+    RMSE_random <- min(fit_random()$results$RMSE)
     
-  #  temp <- data.frame(method = c('Linear Regression', 'Boosted Tree', 'Random Forest'), RMSE = rep(NA,3),
-                       `Test MSE`=rep(NA,3))
-  #  temp$MSE <- c(RMSE_lm, RMSE_Tree, RMSE_random)
-  #  
-  #  Test <- Splitdata()[["Test"]]
-  #  obs <- Test[,input$Re_tag4]
+    temp <- data.frame(method = c('Linear Regression', 'Boosted Tree', 'Random Forest'), RMSE = rep(NA,3),
+                       `Test.MSE`=rep(NA,3))
+    temp$RMSE <- c(RMSE_lm, RMSE_Tree, RMSE_random)
     
-  #  MSE_lm <- RMSE(predict(fit_lm(), Test), obs)
-  #  MSE_Tree <- RMSE(predict(fit_Tree(),n.trees =fit_Tree()$n.trees, Test), obs)
-  #  MSE_random <- RMSE(predict(fit_random()$finalModel, Test),obs)
-  #  temp$`Test MSE` <- c(MSE_lm, MSE_Tree, MSE_random)
-  #  temp
-  #})
+    Test <- Splitdata()[["Test"]]
+    obs <- Test[,input$Re_tag4]
+    
+    MSE_lm <- RMSE(predict(fit_lm(), Test), obs)
+    MSE_Tree <- RMSE(predict(fit_Tree(),n.trees =fit_Tree()$n.trees, Test), obs)
+    MSE_random <- RMSE(predict(fit_random()$finalModel, Test),obs)
+    temp$`Test.MSE` <- c(MSE_lm, MSE_Tree, MSE_random)
+    temp
+  })
+  
+  # Predict
+  output$predict <- eventReactive(input$prebutton, {
+    temp <- air_data[1,]
+    temp$AQI <- input$AQI
+    temp$level <- input$level
+    temp$PM2.5 <- input$PM2
+    temp$PM10 <- input$PM10
+    temp$SO2 <- input$SO2
+    temp$CO <- input$CO
+    temp$NO2 <- input$NO2
+    temp$O3_8h <- input$O3
+    temp$high_tem <- input$high_tem
+    temp$low_tem <- input$low_tem
+    
+    if (input$model_select=="Linear Regression"){
+      return(as.numeric(predict(fit_lm(),temp)))
+    } else{
+      if (input$model_select=="Boosted Tree"){
+        return(as.numeric(predict(fit_Tree(),n.trees =fit_Tree()$n.trees,temp)))
+      } else{
+        return(as.numeric(predict(fit_random()$finalModel,temp)))
+      }
+    }
+    
+  })
   
 })
