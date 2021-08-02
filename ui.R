@@ -170,7 +170,7 @@ dashboardPage(skin = "red",
                            h4("You can change the type of plots below:"),
                            radioButtons(inputId = "plot_select",
                                         label = "",
-                                        choices = c("Box plot", "Time series (line plot)", "Bar plot"),
+                                        choices = c("Box plot", "Bar plot"),
                                         selected = "Box plot"
                            )
                            ),
@@ -195,12 +195,12 @@ dashboardPage(skin = "red",
                 column(width = 9,
                        h1("Plot:"),
                        plotOutput("plot_tag3"),
+                       highchartOutput("hc_plot"),
                        h1("Numerical Summary:"),
                        box(width = 12,
                            skin="white",
                            tableOutput("table_tag3")
                            )
-
                        )
                 
               )

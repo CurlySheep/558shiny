@@ -3,6 +3,7 @@ library(shinydashboard)
 library(DT)
 library(ggplot2)
 library(tidyverse)
+library(highcharter)
 
 shinyServer(function(input, output, session) {
   
@@ -83,11 +84,13 @@ shinyServer(function(input, output, session) {
   
   #####################Tag 3#####################
   
-  # Create subsetted data set
+  # Create subset data set
   Inputdata <- reactive({
-    if(length(input$city_selecte_tag3)==0){return(air_data)}else{
+    if(length(input$city_selecte_tag3)==0){
+      return(air_data %>% select(city, date, input$var_selecte_tag3))
+      }else{
       temp <- air_data %>%
-        filter(city==input$city_selecte_tag3) %>%
+        filter(city %in% input$city_selecte_tag3) %>%
         select(city, date, input$var_selecte_tag3)
       return(temp)
     }
@@ -98,18 +101,23 @@ shinyServer(function(input, output, session) {
     if (input$plot_select=="Box plot"){
       gplot <- ggplot(data = Inputdata()) + geom_boxplot(aes(x=city,y=Inputdata()[,input$var_selecte_tag3])) +
         theme_bw() + labs(x='City',y=input$var_selecte_tag3)
-    } else{
-      if (input$plot_select=="Time series (line plot)"){
-        gplot <- ggplot(data = Inputdata()) + geom_line(aes(x=date, y=Inputdata()[,input$var_selecte_tag3],
-                                                            group=city,color=city),size=1.5) + 
-          theme_bw() + labs(x='Date',y=input$var_selecte_tag3)
+    #} else{
+    #  if (input$plot_select=="Time series (line plot)"){
+       # gplot <- ggplot(data = Inputdata()) + geom_line(aes(x=date, y=Inputdata()[,input$var_selecte_tag3],
+       #                                                     group=city,color=city),size=1.5) + 
+       #   theme_bw() + labs(x='Date',y=input$var_selecte_tag3)
+    #    gplot <- hc_plot(Inputdata(), input$city_selecte_tag3, input$var_selecte_tag3)
       } else{
         gplot <- ggplot(data = Inputdata()) + geom_bar(aes(x=date, y=Inputdata()[,input$var_selecte_tag3],
                                                            fill=city), stat = "identity", position = "dodge") +
           theme_bw() + labs(x='Date',y=input$var_selecte_tag3)
       }
-    } 
     return(gplot)
+  })
+  
+  # High charter plot
+  output$hc_plot <- renderHighchart({
+    hc_plot(Inputdata(), input$city_selecte_tag3, input$var_selecte_tag3)
   })
   
   # Output the plot
