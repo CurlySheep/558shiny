@@ -4,6 +4,8 @@ library(DT)
 library(ggplot2)
 library(tidyverse)
 library(highcharter)
+library(gbm)
+library(caret)
 
 shinyServer(function(input, output, session) {
   
@@ -170,5 +172,104 @@ shinyServer(function(input, output, session) {
     names(temp)[7] <- paste0(as.character(input$perc)," Qu")
     temp
   })
+  
+  
+  #####################Tag 4#####################
+  
+  # Train/Test data split
+  Splitdata <- reactive({
+    set.seed(233)
+    index <- sample(1:nrow(air_data),size = input$size*nrow(air_data))
+    train <- air_data[index,]
+    test <- air_data[-index,]
+    return(list(Train=train, Test=test))
+  })
+  
+  # Create formula first
+  formu <- reactive({
+    if (length(input$var_tag4)==0){
+      return(formula(paste0(input$Re_tag4,'~','AQI+level+PM2.5+PM10+SO2+CO+NO2+O3_8h+high_tem+low_tem')))
+    } else{
+      n <- length(input$var_tag4)
+      temp <- paste0(input$var_tag4,c(rep("+",n-1),""))
+      temp <- paste0(temp, collapse = "")
+      return(formula(paste0(input$Re_tag4, '~', temp)))
+    }
+  })
+  
+  # Fit the Linear model
+  fit_lm <- eventReactive(input$gobutton,{
+    fit.lm <- lm(formu(), data = Splitdata()[["Train"]])
+    return(fit.lm)
+  })
+  
+  # Fit the boosted tree model
+  
+  fit_Tree <- eventReactive(input$gobutton,{
+    gbm.fit <- gbm(
+      formula = formu(),
+      distribution = "gaussian",
+      data = Splitdata()[["Train"]],
+      n.trees = 50,
+      cv.folds = input$cv_fold,
+      n.cores = NULL, # will use all cores by default
+      verbose = FALSE
+    )
+    return(gbm.fit)
+  })
+  
+  # Fit Random Forest model
+  fit_random <- eventReactive(input$gobutton,{
+    trctrl <- trainControl(method = "repeatedcv", number=input$cv_fold, repeats=1)
+    rf_grid <- expand.grid(mtry = 1:11)
+    rf_train <- train(formu(), 
+                      data= Splitdata()[["Train"]], 
+                      method='rf', 
+                      trControl=trctrl,
+                      tuneGrid = rf_grid,
+                      preProcess=c("center", "scale"))
+    return(rf_train)
+  })
+  
+  # Output summary for linear
+  output$summary_lm <- renderPrint({
+    if (input$gobutton){
+      summary(fit_lm())
+    }
+  })
+  
+  # Output summary for tree
+  output$summary_tree <- renderPrint({
+    if (input$gobutton){
+      fit_Tree()
+    }
+  })
+  
+  # Output summary for random forest
+  output$summary_random <- renderPrint({
+    if (input$gobutton){
+      fit_random()[["results"]]
+    }
+  })
+  
+  #Output RMSE on training set
+  #output$RMSE <- renderTable({
+  #  RMSE_lm <- sqrt(mean(fit_lm()$residuals^2))
+  #  RMSE_Tree <- sqrt(mean((fit_Tree()$fit-Splitdata()[["Train"]][,input$Re_tag4])^2))  
+  #  RMSE_random <- min(fit_random()$results$RMSE)
+    
+  #  temp <- data.frame(method = c('Linear Regression', 'Boosted Tree', 'Random Forest'), RMSE = rep(NA,3),
+                       `Test MSE`=rep(NA,3))
+  #  temp$MSE <- c(RMSE_lm, RMSE_Tree, RMSE_random)
+  #  
+  #  Test <- Splitdata()[["Test"]]
+  #  obs <- Test[,input$Re_tag4]
+    
+  #  MSE_lm <- RMSE(predict(fit_lm(), Test), obs)
+  #  MSE_Tree <- RMSE(predict(fit_Tree(),n.trees =fit_Tree()$n.trees, Test), obs)
+  #  MSE_random <- RMSE(predict(fit_random()$finalModel, Test),obs)
+  #  temp$`Test MSE` <- c(MSE_lm, MSE_Tree, MSE_random)
+  #  temp
+  #})
   
 })

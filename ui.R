@@ -131,7 +131,7 @@ dashboardPage(skin = "red",
                          h6("O3_8h: Numeric variable for O3"),
                          h6("new: Reported number of confirmed cases for that day."),
                          h6("new_no_HB: Reported number of confirmed cases without recently visited to Hubei. 
-                            Note that Hubei is the first city which burst the epedamic in China."),
+                            Note that Hubei is the first provience which burst the epedamic in China."),
                          h6("high_tem: The highest temperature."),
                          h6("low_tem: The lowest temperature."), height = 200
                          )
@@ -213,14 +213,113 @@ dashboardPage(skin = "red",
                            tableOutput("table_tag3")
                            )
                        )
-                
               )
-              
       ),
       
       #####################Forth Tab Content####################
       tabItem(tabName = "Tab4",
-              h1("Test")
+              tabsetPanel(
+                tabPanel("Modeling Info",
+                         fluidRow(
+                           column(width = 4,
+                                  h1("Linear Regression"),
+                                  box(width = 12,
+                                      h4("Linear regression accomplishes this by learning a model that best fits the 
+                                         linear relationship between the predictor and response variables.
+                                         The model is fit by minimizing the sum of squared residuals (difference between 
+                                         the observed and predicted responses).")
+                                      )
+                                  ),
+                           column(width = 4,
+                                  h1("Regression Tree"),
+                                  box(width = 12,
+                                      h4("A regression tree is built through a process known as binary recursive partitioning, 
+                                         which is an iterative process that splits the data into partitions or branches, and then 
+                                         continues splitting each partition into smaller groups as the method moves up each branch.")
+                                      )
+                                  ),
+                           column(width = 4,
+                                  h1("Random Forest"),
+                                  box(width = 12,
+                                      h4("Random Forest works by creating a number of decision trees from bootstrap samples using 
+                                         the training data set, with no interaction between the trees, and aggregates the result 
+                                         from these trees before outputting the most optimal result.")
+                                      )
+                                  )
+                         )
+                         ),
+                tabPanel("Model Fitting",
+                         fluidRow(
+                           column(width = 3,
+                                  
+                                  br(),
+                                  # Change train/test set
+                                  box(width = 12,
+                                      sliderInput("size", "Percentage of Training Set",
+                                                  min = 0.01, max = 0.99, value = 0.80, step = 0.01)
+                                      ),
+                                  
+                                  # Select the Response
+                                  box(width = 12,
+                                      selectInput(inputId = 'Re_tag4',
+                                                  label = "Please select the Response variable first:",
+                                                  choices = c("new","new_no_HB")
+                                                  ),
+                                      h6(strong("new:"), " Reported number of confirmed cases."),
+                                      h6(strong("new_no_HB:"), " Reported number of confirmed cases without recently visited to Hubei.")
+                                      ),
+                                  
+                                  # Select variables
+                                  box(width = 12,
+                                      selectInput(inputId = 'var_tag4',
+                                                  label = "Please select variables for all models (multiple choices):",
+                                                  choices = c("AQI","level","PM2.5","PM10","SO2","CO","NO2","O3_8h",
+                                                              "high_tem","low_tem"), multiple = T
+                                                  ),
+                                      h6("By default it selects all the variables.")
+                                      ),
+                                  
+                                  # Cross-validation
+                                  box(width = 12,
+                                      sliderInput("cv_fold", "Cross validation folds:",
+                                                  min = 1, max = 10, value = 3, step = 1)
+                                  )
+                                  
+
+                                  
+                                  ),
+                           
+                           column(width = 9,
+                                  br(),
+                                  # Action Button
+                                  actionButton("gobutton", "Click here to start!"),
+                                  
+                                  # Summary
+                                  box(width = 12,
+                                      column(4,
+                                             h4("Summary for linear regression:"),
+                                             verbatimTextOutput("summary_lm")
+                                             ),
+                                      column(4,
+                                             h4("Summary for boosted tree:"),
+                                             verbatimTextOutput("summary_tree")
+                                             ),
+                                      column(4,
+                                             h4("Summary for Random Forest:"),
+                                             verbatimTextOutput("summary_random")
+                                      )
+                                      ),
+                                  
+                                  # Table
+                                  box(width = 12,
+                                      #tableOutput("RMSE")
+                                      )
+                                  )
+                         )
+                         
+                         ),
+                tabPanel("Prediction")
+              )
               
               )
     )
