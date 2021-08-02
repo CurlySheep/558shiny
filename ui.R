@@ -130,7 +130,7 @@ dashboardPage(skin = "red",
                          h6("NO2: Numeric variable for NO2"),
                          h6("O3_8h: Numeric variable for O3"),
                          h6("new: Reported number of confirmed cases for that day."),
-                         h6("new_no_HB: Reported number of confirmed cases without sojourn history for Hubei. 
+                         h6("new_no_HB: Reported number of confirmed cases without recently visited to Hubei. 
                             Note that Hubei is the first city which burst the epedamic in China."),
                          h6("high_tem: The highest temperature."),
                          h6("low_tem: The lowest temperature."), height = 200
@@ -143,7 +143,67 @@ dashboardPage(skin = "red",
       
       #####################Third Tab Content####################
       tabItem(tabName = "Tab3",
-              h1("Test")
+              fluidRow(
+                column(width = 3,
+                       
+                       # Select Cities
+                       box(width = 12,
+                           h4("You can filter the rows by cities below (multiple choices):"),
+                           selectInput(inputId = "city_selecte_tag3",
+                                       label = "By default it select all 5 cities",
+                                       choices = c("WZ", "SH", "HZ", "XY", "HF"),
+                                       multiple = T
+                           )
+                           ),
+                       
+                       # Select Variables
+                       box(width = 12,
+                           h4("You can change the variables below for both plot and numeric summary (single choices):"),
+                           selectInput(inputId = "var_selecte_tag3",
+                                       label = "Choose variables to summarize:",
+                                       choices = names(air_data)[-c(1:2)], multiple = F
+                           )
+                           ),
+                       
+                       # Select the type of plot
+                       box(width = 12,
+                           h4("You can change the type of plots below:"),
+                           radioButtons(inputId = "plot_select",
+                                        label = "",
+                                        choices = c("Box plot", "Time series (line plot)", "Bar plot"),
+                                        selected = "Box plot"
+                           )
+                           ),
+                       
+                       # Add change summary type button
+                       box(width = 12,
+                           h4("You can change the type of summary below:",
+                              numericInput(inputId = "perc",
+                                           label = "Range from 0.01 to 0.99",
+                                           value = 0.01, min = 0.01, max = 0.99, step = 0.01)
+                              )
+                           ),
+                       
+                       # Download plot
+                       box(width = 12,
+                           h4("You can download the plot by click the button:"),
+                           downloadButton(outputId = "down_plot", label = "Download Plot!")
+                           )
+                       
+                       
+                       ),
+                column(width = 9,
+                       h1("Plot:"),
+                       plotOutput("plot_tag3"),
+                       h1("Numerical Summary:"),
+                       box(width = 12,
+                           skin="white",
+                           tableOutput("table_tag3")
+                           )
+
+                       )
+                
+              )
               
       ),
       
