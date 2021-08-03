@@ -173,6 +173,13 @@ shinyServer(function(input, output, session) {
     temp
   })
   
+  # Update Input
+  observeEvent(input$var_select == 'Simple example', {
+    updateSelectInput(session, inputId = "var_tag4", selected = if(input$var_select == 'Simple example'){c("AQI","PM10","CO")}else{NA})
+    updateSliderInput(session, inputId = "cv_fold", value = if(input$var_select == 'Simple example'){5}else{3})
+    updateSliderInput(session, inputId = "size", value = if(input$var_select == 'Simple example'){0.8}else{0.5})
+  })
+  
   
   #####################Tag 4#####################
   
@@ -210,7 +217,7 @@ shinyServer(function(input, output, session) {
       formula = formu(),
       distribution = "gaussian",
       data = Splitdata()[["Train"]],
-      n.trees = 500,
+      n.trees = 50,
       cv.folds = input$cv_fold,
       n.cores = NULL, # will use all cores by default
       verbose = FALSE
@@ -220,7 +227,7 @@ shinyServer(function(input, output, session) {
   
   # Fit Random Forest model
   fit_random <- eventReactive(input$gobutton,{
-    trctrl <- trainControl(method = "repeatedcv", number=input$cv_fold, repeats=3)
+    trctrl <- trainControl(method = "repeatedcv", number=input$cv_fold, repeats=1)
     rf_grid <- expand.grid(mtry = 1:11)
     rf_train <- train(formu(), 
                       data= Splitdata()[["Train"]], 

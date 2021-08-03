@@ -313,7 +313,7 @@ dashboardPage(skin = "red",
                                   # Change train/test set
                                   box(width = 12,
                                       sliderInput("size", "Percentage of Training Set",
-                                                  min = 0.01, max = 0.99, value = 0.80, step = 0.01)
+                                                  min = 0.01, max = 0.99, value = 0.50, step = 0.01)
                                       ),
                                   
                                   # Select the Response
@@ -344,8 +344,18 @@ dashboardPage(skin = "red",
                                   
                                   # Action Button
                                   box(width = 12,
+                                      h4("You can choose to fully customize or run a preset model:"),
+                                      h4("(Dynamic UI 2)", style = "color:red;"),
+                                      radioButtons(inputId = "var_select",
+                                                   label = "",
+                                                   choices = c("Full customize", "Simple example"),
+                                                   selected = "Full customize"),
                                       actionButton("gobutton", "Click here to start!"),
-                                      h4(strong("Usually it will take 3-5 mins."))
+                                      conditionalPanel(condition = "input.var_select == 'Full customize'",
+                                                       h4(strong("Usually it will take 3-5 mins. Please select
+                                                                 at least 2 input variables because there's some
+                                                                 problems if only select 1 variable.")))
+                                      
                                       )
                                   ),
                            
