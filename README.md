@@ -22,7 +22,7 @@ lapply(packages, install.packages, character.only = TRUE)
 # Code for Running the APP
 
 ```R
-runGitHub(repo = "558shiny", username = "CurlySheep", ref = "main")
+shiny::runGitHub(repo = "558shiny", username = "CurlySheep", ref = "main")
 ```
 
 
