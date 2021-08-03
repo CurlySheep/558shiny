@@ -217,7 +217,7 @@ shinyServer(function(input, output, session) {
       formula = formu(),
       distribution = "gaussian",
       data = Splitdata()[["Train"]],
-      n.trees = 50,
+      n.trees = 500,
       cv.folds = input$cv_fold,
       n.cores = NULL, # will use all cores by default
       verbose = FALSE
