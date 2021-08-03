@@ -210,7 +210,7 @@ shinyServer(function(input, output, session) {
       formula = formu(),
       distribution = "gaussian",
       data = Splitdata()[["Train"]],
-      n.trees = 50,
+      n.trees = 500,
       cv.folds = input$cv_fold,
       n.cores = NULL, # will use all cores by default
       verbose = FALSE
@@ -220,7 +220,7 @@ shinyServer(function(input, output, session) {
   
   # Fit Random Forest model
   fit_random <- eventReactive(input$gobutton,{
-    trctrl <- trainControl(method = "repeatedcv", number=input$cv_fold, repeats=1)
+    trctrl <- trainControl(method = "repeatedcv", number=input$cv_fold, repeats=3)
     rf_grid <- expand.grid(mtry = 1:11)
     rf_train <- train(formu(), 
                       data= Splitdata()[["Train"]], 

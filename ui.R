@@ -185,7 +185,7 @@ dashboardPage(skin = "red",
                        
                        # Add change summary type button
                        box(width = 12,
-                           h4("You can change the type of summary below:",
+                           h4("You can change the quantile of summary variable below:",
                               numericInput(inputId = "perc",
                                            label = "Range from 0.01 to 0.99",
                                            value = 0.01, min = 0.01, max = 0.99, step = 0.01)
@@ -195,6 +195,7 @@ dashboardPage(skin = "red",
                        # Download plot
                        box(width = 12,
                            h4("You can download the plot by select the type first:"),
+                           h4("(Dynamic UI 1)", style = "color:red;"),
                            radioButtons(inputId = "down_type",
                                         label = "",
                                         choices = c("Box/Bar plot", "Line plot")
