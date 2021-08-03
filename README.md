@@ -4,6 +4,10 @@ In this APP I want to study several meteorological factors and air quality indic
 
 4 pages are included in this APP, which are `About` page, `Data` page, `Data exploration` page and `Modeling` page.
 
+`air_polution.csv` is the original data I used in this APP, which is stored at the `main`.
+
+I inserted a picture from wiki-page, and it is stored at the folder `www`.
+
 # List of Packages
 
 ggplot2, shiny, shinydashboard, DT, tidyverse, highcharter, gbm, caret

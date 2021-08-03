@@ -50,7 +50,15 @@ dashboardPage(skin = "red",
                      # Box
                      box(width = 12,
                          h4("The controls for the app are located to the left and the visualizations 
-                            are available on the right.")
+                            are available on the right."),
+                         h4("At each page, usually the interaction features are listed on the left or 
+                         top, and the results are displayed on the right."),
+                         h4("There are 4 pages in this APP."),
+                         h4("At About page, you can see the basic information and find the sources of data."),
+                         h4("At Data page, you can go through the data, subset the data by rows and columns,
+                            and download the data."),
+                         h4("At Data Exploratin page, you can view/download some summary plots."),
+                         h4("At Modeling page, you can fit 3 models, and then use them to predict.")
                          )
                     ),
 
@@ -73,7 +81,7 @@ dashboardPage(skin = "red",
               
               # Add Picture
               
-              shiny::img(src="wikiimage.jpg", height = '500px')
+              div(img(src="wikiimage.jpg", height = '500px'), style="text-align: center;")
               
               
               ),
@@ -218,6 +226,10 @@ dashboardPage(skin = "red",
       
       #####################Forth Tab Content####################
       tabItem(tabName = "Tab4",
+              
+              #add in latex functionality if needed
+              withMathJax(),
+              
               tabsetPanel(
                 tabPanel("Modeling Info",
                          fluidRow(
@@ -227,7 +239,20 @@ dashboardPage(skin = "red",
                                       h4("Linear regression accomplishes this by learning a model that best fits the 
                                          linear relationship between the predictor and response variables.
                                          The model is fit by minimizing the sum of squared residuals (difference between 
-                                         the observed and predicted responses).")
+                                         the observed and predicted responses)."),
+                                      h4("Given a data set \\(y_i,x_{i1},\\cdots,x_{ip}\\) The model takes the form"),
+                                      p("\\(y_i=\\beta_0+\\beta_1x_{i1}+\\cdots+\\beta+px_{ip}+\\varepsilon_i \\)"),
+                                      h4("In the least-squares setting, the optimum parameter is defined as such that minimizes the
+                                         sum of mean squared loss:"),
+                                      p("\\(\\hat{\\beta}=argmin_{\\beta}L(D,\\beta)=argmin_{\\beta}\\sum_{i=1}^n(\\beta x_i-y_i)^2 \\)"),
+                                      h4(strong("Benefits:")),
+                                      h4("Simple and ease with implementation;"),
+                                      h4("Has a considerably lower time complexity;"),
+                                      h4("Perfroms extremely well for linearly data."),
+                                      h4(strong("Drawbacks:")),
+                                      h4("Requires some assumptions like constant residuals;"),
+                                      h4("May be sensitive to Outliers;"),
+                                      h4("Lack of practicality, since most cases in our real world aren't 'linear'")
                                       )
                                   ),
                            column(width = 4,
@@ -235,7 +260,22 @@ dashboardPage(skin = "red",
                                   box(width = 12,
                                       h4("A regression tree is built through a process known as binary recursive partitioning, 
                                          which is an iterative process that splits the data into partitions or branches, and then 
-                                         continues splitting each partition into smaller groups as the method moves up each branch.")
+                                         continues splitting each partition into smaller groups as the method moves up each branch."
+                                         ),
+                                      h4("In this APP I used boosted tree."),
+                                      h4("We are usually given a training set \\((x_1,y_1),\\cdots,(x_n,y_n)\\) of 
+                                         known sample values of x and corresponding values of y. In acoordance with the empirical
+                                         risk minimization principle, the method tries to find an approximation \\(\\hat{F}(x)\\) 
+                                         that minimizes the average value of the loss function on the training set."),
+                                      h4(strong("Benefits:")),
+                                      h4("Lots of flexibility;"),
+                                      h4("Can optimize on different loss functions and provides several hyper parameter tuning options;"),
+                                      h4("It can curbs over-fitting easily."),
+                                      h4(strong("Drawbacks:")),
+                                      h4("May be sensitive to Outliers;"),
+                                      h4("Requires a lot of times;"),
+                                      h4("The method is almost impossible to scale up since every estimator bases its correctness on the
+                                         previous predictors, thus making the procedure difficult to streamline.")
                                       )
                                   ),
                            column(width = 4,
@@ -243,7 +283,23 @@ dashboardPage(skin = "red",
                                   box(width = 12,
                                       h4("Random Forest works by creating a number of decision trees from bootstrap samples using 
                                          the training data set, with no interaction between the trees, and aggregates the result 
-                                         from these trees before outputting the most optimal result.")
+                                         from these trees before outputting the most optimal result."),
+                                      h4("The training algorithm for random forests applies the general technique of bootstrap 
+                                         aggregating, or bagging, to tree learners. Given a training set \\(X=x_1,\\cdots,x_n\\) with
+                                         responses \\(Y=y_1,\\cdots,y_n\\), bagging repeatedly (B times) selects a random sample with
+                                         replacement of the training set and fits trees to these samples:"),
+                                      h4("For \\(b=1,\\cdots,B\\):"),
+                                      h4("1. Sample, with replacement, n training examples from X,Y; call these \\(X_b,Y_b\\)."),
+                                      h4("2. Train a classification or regression tree \\(f_b\\) on \\(X_b,Y_b\\)."),
+                                      h4(strong("Benefits:")),
+                                      h4("It reduces overfitting in decision trees and helps to improve the accuracy;"),
+                                      h4("It works well with both categorical and continuous values;"),
+                                      h4("It automates missing values present in the data."),
+                                      h4(strong("Drawbacks:")),
+                                      h4("Requires much computational power as well as resources;"),
+                                      h4("Requires much time for training;"),
+                                      h4("Due to the ensemble of decision trees, it also suffers interpretability and fails to 
+                                         determine the significance of each variable.")
                                       )
                                   )
                          )
